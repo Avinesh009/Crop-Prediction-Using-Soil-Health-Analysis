@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>CROP PREDICTION</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* Style for the weather container */
+    .weather-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: transparent;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .btn a{
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="weather-container">
+    <button class="btn btn-primary ml-auto">
+      <a href="https://www.accuweather.com" target="_blank" style="color: white;">Weather</a>
+    </button>
+    
+    
+  </div>
+
+  <div class="login">
+    <h1><b>CROP PREDICTION USING SOIL HEALTH ANALYSIS</b></h1>
+    <!-- Main Input For Receiving Query to our ML -->
+    <form action="{{ url_for('predict')}}" method="post" class="npk">
+      <input type="text" name="N" placeholder="N (Nitrogen)" required="required" /><br>
+      <input type="text" name="P" placeholder="P (Potassium)" required="required" /><br>
+      <input type="text" name="K" placeholder="K (Phosphorus)" required="required" /><br>
+      <input type="text" name="temperature" placeholder="Temperature" required="required" /><br>
+      <input type="text" name="humidity" placeholder="Humidity" required="required" /><br>
+      <input type="text" name="ph" placeholder="ph" required="required" /><br>
+      <input type="text" name="rainfall" placeholder="Rainfall" required="required" /><br>
+
+      <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button><br>
+    </form>
+
+    <br>
+    <br>
+    {{ prediction_text }}
+
+  </div>
+
+  <div class="footer">
+    <p class="footer-text">
+      <a href="https://github.com/sudoshivam" class="menu"><span style="cursor: pointer"></span></a>
+    </p>
+  </div>
+
+  <script>
+const apiKey = 'YOUR_ACCUWEATHER_API_KEY';
+const locationKey = 'YOUR_LOCATION_KEY'; // You'd need to obtain the specific location key from AccuWeather
+
+fetch('https://api.openweathermap.org/data/2.5/weather?q=city&appid=YOUR_API_KEY')
+  .then(response => response.json())
+  .then(data => {
+    const weatherInfo = `Weather: ${data.weather[0].main}, Temperature: ${data.main.temp}°C`;
+    console.log(weatherInfo); // Display or use this information as needed
+  })
+  .catch(error => {
+    console.error('Error fetching weather data:', error);
+  });
+
+const displayWeather = async () => {
+  const weatherData = await getWeatherData();
+  if (weatherData && weatherData.length > 0) {
+    const weatherInfo = `Weather: ${weatherData[0].WeatherText}, Temperature: ${weatherData[0].Temperature.Metric.Value}°C`;
+    console.log(weatherInfo); // You can display this information as needed
+  }
+};
+
+displayWeather();
+
+
+</script>
+</body>
+
+</html>
